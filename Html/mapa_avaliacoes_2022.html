@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_de84aa8174bd09e96768da8d3237c6ed {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+        
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+</head>
+<body>
+    
+    
+    <div style="position: fixed;
+        bottom: 50px; left: 50px; width: 200px; height: auto;
+        background-color: white; z-index:9999; font-size:12px;
+        border:1px solid grey; border-radius:8px; padding: 8px; box-shadow: 2px 2px 5px rgba(0,0,0,0.3);">
+        <b>Legenda (2022):</b><br>
+        <span style='color:blue'>Azul</span> = Avaliação alta<br>
+        <span style='color:red'>Vermelho</span> = Avaliação baixa<br>
+        Tamanho do círculo = Vendas<br>
+        Cor do círculo = Avaliação média
+    </div>
+    
+    
+            <div class="folium-map" id="map_de84aa8174bd09e96768da8d3237c6ed" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_de84aa8174bd09e96768da8d3237c6ed = L.map(
+                "map_de84aa8174bd09e96768da8d3237c6ed",
+                {
+                    center: [-14.235, -51.925],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 4,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_2e5fd0f183dcdea71c4a73bff05556c4 = L.tileLayer(
+                "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 20,
+  "maxNativeZoom": 20,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"https://carto.com/attributions\"\u003eCARTO\u003c/a\u003e",
+  "subdomains": "abcd",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_2e5fd0f183dcdea71c4a73bff05556c4.addTo(map_de84aa8174bd09e96768da8d3237c6ed);
+        
+    
+    var color_map_cab045c410655a0cb10a00e55597c981 = {};
+
+    
+    color_map_cab045c410655a0cb10a00e55597c981.color = d3.scale.threshold()
+              .domain([3.0, 3.004008016032064, 3.0080160320641283, 3.012024048096192, 3.0160320641282565, 3.0200400801603204, 3.024048096192385, 3.0280561122244487, 3.032064128256513, 3.036072144288577, 3.0400801603206413, 3.0440881763527052, 3.0480961923847696, 3.0521042084168335, 3.056112224448898, 3.0601202404809618, 3.064128256513026, 3.06813627254509, 3.0721442885771544, 3.0761523046092183, 3.0801603206412826, 3.0841683366733466, 3.088176352705411, 3.092184368737475, 3.096192384769539, 3.100200400801603, 3.1042084168336674, 3.1082164328657313, 3.1122244488977957, 3.1162324649298596, 3.120240480961924, 3.124248496993988, 3.1282565130260522, 3.132264529058116, 3.1362725450901805, 3.1402805611222444, 3.1442885771543088, 3.1482965931863727, 3.152304609218437, 3.156312625250501, 3.1603206412825653, 3.164328657314629, 3.1683366733466936, 3.1723446893787575, 3.176352705410822, 3.1803607214428857, 3.18436873747495, 3.188376753507014, 3.1923847695390783, 3.1963927855711423, 3.2004008016032066, 3.2044088176352705, 3.208416833667335, 3.212424849699399, 3.2164328657314627, 3.220440881763527, 3.2244488977955914, 3.2284569138276553, 3.2324649298597192, 3.2364729458917836, 3.2404809619238475, 3.244488977955912, 3.2484969939879758, 3.25250501002004, 3.256513026052104, 3.2605210420841684, 3.2645290581162323, 3.2685370741482966, 3.2725450901803605, 3.276553106212425, 3.280561122244489, 3.284569138276553, 3.288577154308617, 3.2925851703406814, 3.2965931863727453, 3.3006012024048097, 3.3046092184368736, 3.308617234468938, 3.312625250501002, 3.3166332665330662, 3.32064128256513, 3.3246492985971945, 3.3286573146292584, 3.3326653306613228, 3.3366733466933867, 3.340681362725451, 3.344689378757515, 3.3486973947895793, 3.352705410821643, 3.3567134268537075, 3.3607214428857715, 3.364729458917836, 3.3687374749498997, 3.372745490981964, 3.376753507014028, 3.3807615230460923, 3.3847695390781563, 3.3887775551102206, 3.3927855711422845, 3.396793587174349, 3.400801603206413, 3.404809619238477, 3.408817635270541, 3.4128256513026054, 3.4168336673346693, 3.420841683366733, 3.4248496993987976, 3.428857715430862, 3.432865731462926, 3.4368737474949898, 3.440881763527054, 3.4448897795591185, 3.4488977955911824, 3.4529058116232463, 3.4569138276553106, 3.460921843687375, 3.464929859719439, 3.468937875751503, 3.472945891783567, 3.476953907815631, 3.4809619238476954, 3.4849699398797593, 3.4889779559118237, 3.4929859719438876, 3.496993987975952, 3.501002004008016, 3.50501002004008, 3.509018036072144, 3.5130260521042085, 3.5170340681362724, 3.5210420841683367, 3.5250501002004007, 3.529058116232465, 3.533066132264529, 3.5370741482965933, 3.541082164328657, 3.5450901803607215, 3.5490981963927855, 3.55310621242485, 3.5571142284569137, 3.561122244488978, 3.565130260521042, 3.5691382765531063, 3.5731462925851702, 3.5771543086172346, 3.5811623246492985, 3.585170340681363, 3.5891783567134268, 3.593186372745491, 3.597194388777555, 3.6012024048096194, 3.6052104208416833, 3.6092184368737477, 3.6132264529058116, 3.617234468937876, 3.62124248496994, 3.6252505010020037, 3.629258517034068, 3.6332665330661325, 3.6372745490981964, 3.6412825651302603, 3.6452905811623246, 3.649298597194389, 3.653306613226453, 3.657314629258517, 3.661322645290581, 3.6653306613226455, 3.6693386773547094, 3.6733466933867733, 3.6773547094188377, 3.681362725450902, 3.685370741482966, 3.68937875751503, 3.693386773547094, 3.6973947895791586, 3.7014028056112225, 3.7054108216432864, 3.7094188376753507, 3.713426853707415, 3.717434869739479, 3.721442885771543, 3.7254509018036073, 3.729458917835671, 3.7334669338677355, 3.7374749498997994, 3.741482965931864, 3.7454909819639277, 3.749498997995992, 3.753507014028056, 3.7575150300601203, 3.7615230460921842, 3.7655310621242486, 3.7695390781563125, 3.773547094188377, 3.7775551102204408, 3.781563126252505, 3.785571142284569, 3.7895791583166334, 3.7935871743486973, 3.7975951903807617, 3.8016032064128256, 3.80561122244489, 3.809619238476954, 3.813627254509018, 3.817635270541082, 3.8216432865731464, 3.8256513026052104, 3.8296593186372747, 3.8336673346693386, 3.837675350701403, 3.841683366733467, 3.845691382765531, 3.849699398797595, 3.8537074148296595, 3.8577154308617234, 3.8617234468937873, 3.8657314629258517, 3.869739478957916, 3.87374749498998, 3.877755511022044, 3.881763527054108, 3.8857715430861726, 3.8897795591182365, 3.8937875751503004, 3.8977955911823647, 3.901803607214429, 3.905811623246493, 3.909819639278557, 3.9138276553106213, 3.9178356713426856, 3.9218436873747495, 3.9258517034068134, 3.929859719438878, 3.933867735470942, 3.937875751503006, 3.94188376753507, 3.9458917835671343, 3.9498997995991982, 3.9539078156312626, 3.9579158316633265, 3.961923847695391, 3.9659318637274548, 3.969939879759519, 3.973947895791583, 3.9779559118236474, 3.9819639278557113, 3.9859719438877756, 3.9899799599198396, 3.993987975951904, 3.997995991983968, 4.002004008016032, 4.006012024048096, 4.01002004008016, 4.014028056112224, 4.018036072144288, 4.022044088176353, 4.026052104208417, 4.030060120240481, 4.034068136272545, 4.038076152304609, 4.0420841683366735, 4.046092184368737, 4.050100200400801, 4.054108216432866, 4.05811623246493, 4.062124248496994, 4.066132264529058, 4.070140280561122, 4.074148296593187, 4.07815631262525, 4.082164328657314, 4.086172344689379, 4.090180360721443, 4.094188376753507, 4.098196392785571, 4.102204408817635, 4.1062124248497, 4.110220440881763, 4.114228456913827, 4.118236472945892, 4.122244488977956, 4.1262525050100205, 4.130260521042084, 4.134268537074148, 4.138276553106213, 4.142284569138276, 4.1462925851703405, 4.150300601202405, 4.154308617234469, 4.158316633266534, 4.162324649298597, 4.166332665330661, 4.170340681362726, 4.174348697394789, 4.1783567134268536, 4.182364729458918, 4.186372745490982, 4.190380761523047, 4.19438877755511, 4.198396793587174, 4.202404809619239, 4.206412825651302, 4.210420841683367, 4.214428857715431, 4.218436873747495, 4.222444889779559, 4.226452905811623, 4.2304609218436875, 4.234468937875752, 4.238476953907815, 4.24248496993988, 4.246492985971944, 4.2505010020040075, 4.254509018036072, 4.258517034068136, 4.2625250501002006, 4.266533066132265, 4.270541082164328, 4.274549098196393, 4.278557114228457, 4.2825651302605205, 4.286573146292585, 4.290581162324649, 4.294589178356714, 4.298597194388778, 4.302605210420841, 4.306613226452906, 4.31062124248497, 4.314629258517034, 4.318637274549098, 4.322645290581162, 4.326653306613227, 4.330661322645291, 4.3346693386773545, 4.338677354709419, 4.342685370741483, 4.346693386773547, 4.350701402805611, 4.354709418837675, 4.35871743486974, 4.362725450901804, 4.3667334669338675, 4.370741482965932, 4.374749498997996, 4.37875751503006, 4.382765531062124, 4.386773547094188, 4.390781563126253, 4.394789579158317, 4.398797595190381, 4.402805611222445, 4.406813627254509, 4.410821643286573, 4.414829659318637, 4.4188376753507015, 4.422845691382766, 4.42685370741483, 4.430861723446894, 4.434869739478958, 4.438877755511022, 4.442885771543086, 4.44689378757515, 4.4509018036072145, 4.454909819639278, 4.458917835671342, 4.462925851703407, 4.466933867735471, 4.470941883767535, 4.474949899799599, 4.478957915831663, 4.482965931863728, 4.486973947895791, 4.490981963927855, 4.49498997995992, 4.498997995991984, 4.5030060120240485, 4.507014028056112, 4.511022044088176, 4.515030060120241, 4.519038076152304, 4.5230460921843685, 4.527054108216433, 4.531062124248497, 4.5350701402805615, 4.539078156312625, 4.543086172344689, 4.547094188376754, 4.551102204408817, 4.5551102204408815, 4.559118236472946, 4.56312625250501, 4.567134268537075, 4.571142284569138, 4.575150300601202, 4.579158316633267, 4.58316633266533, 4.587174348697395, 4.591182364729459, 4.595190380761523, 4.599198396793588, 4.603206412825651, 4.6072144288577155, 4.61122244488978, 4.615230460921843, 4.619238476953908, 4.623246492985972, 4.627254509018036, 4.631262525050101, 4.635270541082164, 4.6392785571142285, 4.643286573146293, 4.647294589178356, 4.651302605210421, 4.655310621242485, 4.659318637274549, 4.663326653306614, 4.667334669338677, 4.671342685370742, 4.675350701402806, 4.679358717434869, 4.683366733466934, 4.687374749498998, 4.691382765531062, 4.695390781563126, 4.69939879759519, 4.703406813627255, 4.707414829659319, 4.7114228456913825, 4.715430861723447, 4.719438877755511, 4.723446893787575, 4.727454909819639, 4.731462925851703, 4.735470941883768, 4.739478957915832, 4.7434869739478955, 4.74749498997996, 4.751503006012024, 4.755511022044088, 4.759519038076152, 4.763527054108216, 4.767535070140281, 4.771543086172345, 4.775551102204409, 4.779559118236473, 4.783567134268537, 4.787575150300601, 4.791583166332665, 4.7955911823647295, 4.799599198396794, 4.803607214428858, 4.807615230460922, 4.811623246492986, 4.81563126252505, 4.819639278557114, 4.823647294589178, 4.8276553106212425, 4.831663326653307, 4.835671342685371, 4.839679358717435, 4.843687374749499, 4.847695390781563, 4.851703406813627, 4.855711422845691, 4.859719438877756, 4.86372745490982, 4.867735470941884, 4.871743486973948, 4.875751503006012, 4.8797595190380765, 4.88376753507014, 4.887775551102204, 4.891783567134269, 4.895791583166332, 4.8997995991983965, 4.903807615230461, 4.907815631262525, 4.9118236472945895, 4.915831663326653, 4.919839679358717, 4.923847695390782, 4.927855711422845, 4.9318637274549095, 4.935871743486974, 4.939879759519038, 4.943887775551103, 4.947895791583166, 4.95190380761523, 4.955911823647295, 4.959919839679358, 4.963927855711423, 4.967935871743487, 4.971943887775551, 4.975951903807616, 4.979959919839679, 4.9839679358717435, 4.987975951903808, 4.991983967935871, 4.995991983967936, 5.0])
+              .range(['#ff0000ff', '#ff0100ff', '#ff0200ff', '#ff0300ff', '#ff0500ff', '#ff0600ff', '#ff0700ff', '#ff0900ff', '#ff0a00ff', '#ff0b00ff', '#ff0d00ff', '#ff0e00ff', '#ff0f00ff', '#ff1100ff', '#ff1200ff', '#ff1300ff', '#ff1500ff', '#ff1600ff', '#ff1700ff', '#ff1900ff', '#ff1a00ff', '#ff1b00ff', '#ff1d00ff', '#ff1e00ff', '#ff1f00ff', '#ff2100ff', '#ff2200ff', '#ff2300ff', '#ff2500ff', '#ff2600ff', '#ff2700ff', '#ff2900ff', '#ff2a00ff', '#ff2b00ff', '#ff2d00ff', '#ff2e00ff', '#ff2f00ff', '#ff3100ff', '#ff3200ff', '#ff3300ff', '#ff3500ff', '#ff3600ff', '#ff3700ff', '#ff3900ff', '#ff3a00ff', '#ff3b00ff', '#ff3d00ff', '#ff3e00ff', '#ff3f00ff', '#ff4100ff', '#ff4200ff', '#ff4300ff', '#ff4500ff', '#ff4600ff', '#ff4700ff', '#ff4900ff', '#ff4a00ff', '#ff4b00ff', '#ff4d00ff', '#ff4e00ff', '#ff4f00ff', '#ff5000ff', '#ff5200ff', '#ff5300ff', '#ff5400ff', '#ff5600ff', '#ff5700ff', '#ff5800ff', '#ff5a00ff', '#ff5b00ff', '#ff5c00ff', '#ff5e00ff', '#ff5f00ff', '#ff6000ff', '#ff6200ff', '#ff6300ff', '#ff6400ff', '#ff6600ff', '#ff6700ff', '#ff6800ff', '#ff6a00ff', '#ff6b00ff', '#ff6c00ff', '#ff6e00ff', '#ff6f00ff', '#ff7000ff', '#ff7200ff', '#ff7300ff', '#ff7400ff', '#ff7600ff', '#ff7700ff', '#ff7800ff', '#ff7a00ff', '#ff7b00ff', '#ff7c00ff', '#ff7e00ff', '#ff7f00ff', '#ff8000ff', '#ff8200ff', '#ff8300ff', '#ff8400ff', '#ff8600ff', '#ff8700ff', '#ff8800ff', '#ff8a00ff', '#ff8b00ff', '#ff8c00ff', '#ff8e00ff', '#ff8f00ff', '#ff9000ff', '#ff9200ff', '#ff9300ff', '#ff9400ff', '#ff9600ff', '#ff9700ff', '#ff9800ff', '#ff9a00ff', '#ff9b00ff', '#ff9c00ff', '#ff9e00ff', '#ff9f00ff', '#ffa000ff', '#ffa100ff', '#ffa300ff', '#ffa400ff', '#ffa500ff', '#ffa600ff', '#ffa700ff', '#ffa800ff', '#ffa800ff', '#ffa900ff', '#ffaa00ff', '#ffaa00ff', '#ffab00ff', '#ffac00ff', '#ffad00ff', '#ffad00ff', '#ffae00ff', '#ffaf00ff', '#ffaf00ff', '#ffb000ff', '#ffb100ff', '#ffb200ff', '#ffb200ff', '#ffb300ff', '#ffb400ff', '#ffb500ff', '#ffb500ff', '#ffb600ff', '#ffb700ff', '#ffb700ff', '#ffb800ff', '#ffb900ff', '#ffba00ff', '#ffba00ff', '#ffbb00ff', '#ffbc00ff', '#ffbd00ff', '#ffbd00ff', '#ffbe00ff', '#ffbf00ff', '#ffbf00ff', '#ffc000ff', '#ffc100ff', '#ffc200ff', '#ffc200ff', '#ffc300ff', '#ffc400ff', '#ffc400ff', '#ffc500ff', '#ffc600ff', '#ffc700ff', '#ffc700ff', '#ffc800ff', '#ffc900ff', '#ffca00ff', '#ffca00ff', '#ffcb00ff', '#ffcc00ff', '#ffcc00ff', '#ffcd00ff', '#ffce00ff', '#ffcf00ff', '#ffcf00ff', '#ffd000ff', '#ffd100ff', '#ffd200ff', '#ffd200ff', '#ffd300ff', '#ffd400ff', '#ffd400ff', '#ffd500ff', '#ffd600ff', '#ffd700ff', '#ffd700ff', '#ffd800ff', '#ffd900ff', '#ffd900ff', '#ffda00ff', '#ffdb00ff', '#ffdc00ff', '#ffdc00ff', '#ffdd00ff', '#ffde00ff', '#ffdf00ff', '#ffdf00ff', '#ffe000ff', '#ffe100ff', '#ffe100ff', '#ffe200ff', '#ffe300ff', '#ffe400ff', '#ffe400ff', '#ffe500ff', '#ffe600ff', '#ffe700ff', '#ffe700ff', '#ffe800ff', '#ffe900ff', '#ffe900ff', '#ffea00ff', '#ffeb00ff', '#ffec00ff', '#ffec00ff', '#ffed00ff', '#ffee00ff', '#ffee00ff', '#ffef00ff', '#fff000ff', '#fff100ff', '#fff100ff', '#fff200ff', '#fff300ff', '#fff400ff', '#fff400ff', '#fff500ff', '#fff600ff', '#fff600ff', '#fff700ff', '#fff800ff', '#fff900ff', '#fff900ff', '#fffa00ff', '#fffb00ff', '#fffc00ff', '#fffc00ff', '#fffd00ff', '#fffe00ff', '#fffe00ff', '#ffff00ff', '#ffff00ff', '#ffff02ff', '#feff04ff', '#fdfe06ff', '#fdfe08ff', '#fcfe0aff', '#fbfd0cff', '#fbfd0dff', '#fafd0fff', '#f9fd11ff', '#f9fc13ff', '#f8fc15ff', '#f7fc17ff', '#f7fb18ff', '#f6fb1aff', '#f5fb1cff', '#f5fa1eff', '#f4fa20ff', '#f3fa22ff', '#f3f924ff', '#f2f925ff', '#f1f927ff', '#f1f829ff', '#f0f82bff', '#eff82dff', '#eff72fff', '#eef731ff', '#edf732ff', '#edf734ff', '#ecf636ff', '#ebf638ff', '#ebf63aff', '#eaf53cff', '#e9f53eff', '#e9f53fff', '#e8f441ff', '#e7f443ff', '#e7f445ff', '#e6f347ff', '#e5f349ff', '#e5f34aff', '#e4f24cff', '#e3f24eff', '#e3f250ff', '#e2f252ff', '#e1f154ff', '#e1f156ff', '#e0f157ff', '#dff059ff', '#dff05bff', '#def05dff', '#deef5fff', '#ddef61ff', '#dcef63ff', '#dcee64ff', '#dbee66ff', '#daee68ff', '#daed6aff', '#d9ed6cff', '#d8ed6eff', '#d8ed6fff', '#d7ec71ff', '#d6ec73ff', '#d6ec75ff', '#d5eb77ff', '#d4eb79ff', '#d4eb7bff', '#d3ea7cff', '#d2ea7eff', '#d2ea80ff', '#d1e982ff', '#d0e984ff', '#d0e986ff', '#cfe888ff', '#cee889ff', '#cee88bff', '#cde78dff', '#cce78fff', '#cce791ff', '#cbe793ff', '#cae694ff', '#cae696ff', '#c9e698ff', '#c8e59aff', '#c8e59cff', '#c7e59eff', '#c6e4a0ff', '#c6e4a1ff', '#c5e4a3ff', '#c4e3a5ff', '#c4e3a7ff', '#c3e3a9ff', '#c2e2abff', '#c2e2adff', '#c1e2aeff', '#c0e2b0ff', '#c0e1b2ff', '#bfe1b4ff', '#bfe1b6ff', '#bee0b8ff', '#bde0baff', '#bde0bbff', '#bcdfbdff', '#bbdfbfff', '#bbdfc1ff', '#badec3ff', '#b9dec5ff', '#b9dec6ff', '#b8ddc8ff', '#b7ddcaff', '#b7ddccff', '#b6ddceff', '#b5dcd0ff', '#b5dcd2ff', '#b4dcd3ff', '#b3dbd5ff', '#b3dbd7ff', '#b2dbd9ff', '#b1dadbff', '#b1daddff', '#b0dadfff', '#afd9e0ff', '#afd9e2ff', '#aed9e4ff', '#add8e6ff', '#acd7e7ff', '#abd5e7ff', '#a9d4e7ff', '#a8d2e7ff', '#a7d0e7ff', '#a5cee8ff', '#a4cde8ff', '#a2cbe8ff', '#a1c9e8ff', '#a0c7e8ff', '#9ec6e9ff', '#9dc4e9ff', '#9bc2e9ff', '#9ac0e9ff', '#99bfe9ff', '#97bdeaff', '#96bbeaff', '#94b9eaff', '#93b8eaff', '#92b6eaff', '#90b4ebff', '#8fb3ebff', '#8eb1ebff', '#8cafebff', '#8badebff', '#89acecff', '#88aaecff', '#87a8ecff', '#85a6ecff', '#84a5ecff', '#82a3edff', '#81a1edff', '#809fedff', '#7e9eedff', '#7d9cedff', '#7b9aeeff', '#7a98eeff', '#7997eeff', '#7795eeff', '#7693eeff', '#7492efff', '#7390efff', '#728eefff', '#708cefff', '#6f8befff', '#6d89f0ff', '#6c87f0ff', '#6b85f0ff', '#6984f0ff', '#6882f0ff', '#6780f1ff', '#657ef1ff', '#647df1ff', '#627bf1ff', '#6179f1ff', '#6077f2ff', '#5e76f2ff', '#5d74f2ff', '#5b72f2ff', '#5a70f2ff', '#596ff3ff', '#576df3ff', '#566bf3ff', '#546af3ff', '#5368f3ff', '#5266f4ff', '#5064f4ff', '#4f63f4ff', '#4d61f4ff', '#4c5ff4ff', '#4b5df5ff', '#495cf5ff', '#485af5ff', '#4758f5ff', '#4556f5ff', '#4455f6ff', '#4253f6ff', '#4151f6ff', '#404ff6ff', '#3e4ef6ff', '#3d4cf7ff', '#3b4af7ff', '#3a49f7ff', '#3947f7ff', '#3745f7ff', '#3643f8ff', '#3442f8ff', '#3340f8ff', '#323ef8ff', '#303cf8ff', '#2f3bf9ff', '#2d39f9ff', '#2c37f9ff', '#2b35f9ff', '#2934f9ff', '#2832faff', '#2630faff', '#252efaff', '#242dfaff', '#222bfaff', '#2129fbff', '#2027fbff', '#1e26fbff', '#1d24fbff', '#1b22fbff', '#1a21fcff', '#191ffcff', '#171dfcff', '#161bfcff', '#141afcff', '#1318fdff', '#1216fdff', '#1014fdff', '#0f13fdff', '#0d11fdff', '#0c0ffeff', '#0b0dfeff', '#090cfeff', '#080afeff', '#0608feff', '#0506ffff', '#0405ffff', '#0203ffff', '#0101ffff', '#0000ffff']);
+    
+
+    color_map_cab045c410655a0cb10a00e55597c981.x = d3.scale.linear()
+              .domain([3.0, 5.0])
+              .range([0, 450 - 50]);
+
+    color_map_cab045c410655a0cb10a00e55597c981.legend = L.control({position: 'topright'});
+    color_map_cab045c410655a0cb10a00e55597c981.legend.onAdd = function (map) {var div = L.DomUtil.create('div', 'legend'); return div};
+    color_map_cab045c410655a0cb10a00e55597c981.legend.addTo(map_de84aa8174bd09e96768da8d3237c6ed);
+
+    color_map_cab045c410655a0cb10a00e55597c981.xAxis = d3.svg.axis()
+        .scale(color_map_cab045c410655a0cb10a00e55597c981.x)
+        .orient("top")
+        .tickSize(1)
+        .tickValues([3.0, 3.5, 4.0, 4.5, 5.0]);
+
+    color_map_cab045c410655a0cb10a00e55597c981.svg = d3.select(".legend.leaflet-control").append("svg")
+        .attr("id", 'legend')
+        .attr("width", 450)
+        .attr("height", 40);
+
+    color_map_cab045c410655a0cb10a00e55597c981.g = color_map_cab045c410655a0cb10a00e55597c981.svg.append("g")
+        .attr("class", "key")
+        .attr("fill", "black")
+        .attr("transform", "translate(25,16)");
+
+    color_map_cab045c410655a0cb10a00e55597c981.g.selectAll("rect")
+        .data(color_map_cab045c410655a0cb10a00e55597c981.color.range().map(function(d, i) {
+          return {
+            x0: i ? color_map_cab045c410655a0cb10a00e55597c981.x(color_map_cab045c410655a0cb10a00e55597c981.color.domain()[i - 1]) : color_map_cab045c410655a0cb10a00e55597c981.x.range()[0],
+            x1: i < color_map_cab045c410655a0cb10a00e55597c981.color.domain().length ? color_map_cab045c410655a0cb10a00e55597c981.x(color_map_cab045c410655a0cb10a00e55597c981.color.domain()[i]) : color_map_cab045c410655a0cb10a00e55597c981.x.range()[1],
+            z: d
+          };
+        }))
+      .enter().append("rect")
+        .attr("height", 40 - 30)
+        .attr("x", function(d) { return d.x0; })
+        .attr("width", function(d) { return d.x1 - d.x0; })
+        .style("fill", function(d) { return d.z; });
+
+    color_map_cab045c410655a0cb10a00e55597c981.g.call(color_map_cab045c410655a0cb10a00e55597c981.xAxis).append("text")
+        .attr("class", "caption")
+        .attr("y", 21)
+        .attr("fill", "black")
+        .text("Avalia\u00e7\u00e3o M\u00e9dia da Compra");
+    
+            var circle_marker_57036b9c4779b88dfaedd4490fc73bd0 = L.circleMarker(
+                [-8.77, -70.55],
+                {"bubblingMouseEvents": true, "color": "#0000ffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#0000ffff", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 0.8, "stroke": true, "weight": 3}
+            ).addTo(map_de84aa8174bd09e96768da8d3237c6ed);
+        
+    
+        var popup_cec95527cd7cb25a385234111ff006df = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_94dc7c9f7587fa68f9e56c9af11bd016 = $(`<div id="html_94dc7c9f7587fa68f9e56c9af11bd016" style="width: 100.0%; height: 100.0%;">                 <b>Local:</b> AC<br>                 <b>Vendas:</b> 1<br>                 <b>Avaliação média:</b> 5.00<br>                 <b>Frete total:</b> R$123.84<br>                 <b>Frete médio:</b> R$123.84             </div>`)[0];
+                popup_cec95527cd7cb25a385234111ff006df.setContent(html_94dc7c9f7587fa68f9e56c9af11bd016);
+            
+        
+
+        circle_marker_57036b9c4779b88dfaedd4490fc73bd0.bindPopup(popup_cec95527cd7cb25a385234111ff006df)
+        ;
+
+        
+    
+    
+            var circle_marker_b96f69ea0f7c299d52df48a7f0645f82 = L.circleMarker(
+                [-9.62, -36.82],
+                {"bubblingMouseEvents": true, "color": "#ff1700ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff1700ff", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 2.9933259094191533, "stroke": true, "weight": 3}
+            ).addTo(map_de84aa8174bd09e96768da8d3237c6ed);
+        
+    
+        var popup_51ab7ad88e66c767095ea95f59f7dcad = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_686ab5e62bfc2b6d55c20d7332651542 = $(`<div id="html_686ab5e62bfc2b6d55c20d7332651542" style="width: 100.0%; height: 100.0%;">                 <b>Local:</b> AL<br>                 <b>Vendas:</b> 14<br>                 <b>Avaliação média:</b> 3.07<br>                 <b>Frete total:</b> R$461.18<br>                 <b>Frete médio:</b> R$32.94             </div>`)[0];
+                popup_51ab7ad88e66c767095ea95f59f7dcad.setContent(html_686ab5e62bfc2b6d55c20d7332651542);
+            
+        
+
+        circle_marker_b96f69ea0f7c299d52df48a7f0645f82.bindPopup(popup_51ab7ad88e66c767095ea95f59f7dcad)
+        ;
+
+        
+    
+    
+            var circle_marker_032fbe1681f8f2797b4d7bec0cee33c1 = L.circleMarker(
+                [-3.47, -65.1],
+                {"bubblingMouseEvents": true, "color": "#d6ec73ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#d6ec73ff", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 1.6, "stroke": true, "weight": 3}
+            ).addTo(map_de84aa8174bd09e96768da8d3237c6ed);
+        
+    
+        var popup_23bdf9fa3d700fe6c1daa7892ba1a428 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_41259c7886354cfb34ad60d236d453c8 = $(`<div id="html_41259c7886354cfb34ad60d236d453c8" style="width: 100.0%; height: 100.0%;">                 <b>Local:</b> AM<br>                 <b>Vendas:</b> 4<br>                 <b>Avaliação média:</b> 4.25<br>                 <b>Frete total:</b> R$115.58<br>                 <b>Frete médio:</b> R$28.90             </div>`)[0];
+                popup_23bdf9fa3d700fe6c1daa7892ba1a428.setContent(html_41259c7886354cfb34ad60d236d453c8);
+            
+        
+
+        circle_marker_032fbe1681f8f2797b4d7bec0cee33c1.bindPopup(popup_23bdf9fa3d700fe6c1daa7892ba1a428)
+        ;
+
+        
+    
+    
+            var circle_marker_7ceb06ec09afa0cdc6bcfb0fd453685d = L.circleMarker(
+                [1.41, -51.77],
+                {"bubblingMouseEvents": true, "color": "#ffff00ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ffff00ff", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 0.8, "stroke": true, "weight": 3}
+            ).addTo(map_de84aa8174bd09e96768da8d3237c6ed);
+        
+    
+        var popup_04ef32c51bced521a87b83a787d83f13 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_586d4a9b8106e07c1b44ef949f8a8176 = $(`<div id="html_586d4a9b8106e07c1b44ef949f8a8176" style="width: 100.0%; height: 100.0%;">                 <b>Local:</b> AP<br>                 <b>Vendas:</b> 1<br>                 <b>Avaliação média:</b> 4.00<br>                 <b>Frete total:</b> R$0.00<br>                 <b>Frete médio:</b> R$0.00             </div>`)[0];
+                popup_04ef32c51bced521a87b83a787d83f13.setContent(html_586d4a9b8106e07c1b44ef949f8a8176);
+            
+        
+
+        circle_marker_7ceb06ec09afa0cdc6bcfb0fd453685d.bindPopup(popup_04ef32c51bced521a87b83a787d83f13)
+        ;
+
+        
+    
+    
+            var circle_marker_ab52d88743f55abc22e397bfdd53647a = L.circleMarker(
+                [-13.29, -41.71],
+                {"bubblingMouseEvents": true, "color": "#ffd100ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ffd100ff", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.37563556583431, "stroke": true, "weight": 3}
+            ).addTo(map_de84aa8174bd09e96768da8d3237c6ed);
+        
+    
+        var popup_106b647e738ae0bfbef726bd40ff091b = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_b190187e2562a78ee5b040a5c11e87b1 = $(`<div id="html_b190187e2562a78ee5b040a5c11e87b1" style="width: 100.0%; height: 100.0%;">                 <b>Local:</b> BA<br>                 <b>Vendas:</b> 85<br>                 <b>Avaliação média:</b> 3.74<br>                 <b>Frete total:</b> R$2323.47<br>                 <b>Frete médio:</b> R$27.33             </div>`)[0];
+                popup_106b647e738ae0bfbef726bd40ff091b.setContent(html_b190187e2562a78ee5b040a5c11e87b1);
+            
+        
+
+        circle_marker_ab52d88743f55abc22e397bfdd53647a.bindPopup(popup_106b647e738ae0bfbef726bd40ff091b)
+        ;
+
+        
+    
+    
+            var circle_marker_e28fe1b37ec8818d97db57c93f8577cc = L.circleMarker(
+                [-5.2, -39.53],
+                {"bubblingMouseEvents": true, "color": "#ffd900ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ffd900ff", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5.768882040742383, "stroke": true, "weight": 3}
+            ).addTo(map_de84aa8174bd09e96768da8d3237c6ed);
+        
+    
+        var popup_56c7895bc4c963877c76bc17543bf887 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_a4350dffafd99764efe9525b0f160066 = $(`<div id="html_a4350dffafd99764efe9525b0f160066" style="width: 100.0%; height: 100.0%;">                 <b>Local:</b> CE<br>                 <b>Vendas:</b> 52<br>                 <b>Avaliação média:</b> 3.79<br>                 <b>Frete total:</b> R$1668.65<br>                 <b>Frete médio:</b> R$32.09             </div>`)[0];
+                popup_56c7895bc4c963877c76bc17543bf887.setContent(html_a4350dffafd99764efe9525b0f160066);
+            
+        
+
+        circle_marker_e28fe1b37ec8818d97db57c93f8577cc.bindPopup(popup_56c7895bc4c963877c76bc17543bf887)
+        ;
+
+        
+    
+    
+            var circle_marker_31a0b8bc6ec69eb9125790ceb79bb343 = L.circleMarker(
+                [-15.83, -47.86],
+                {"bubblingMouseEvents": true, "color": "#c9e698ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#c9e698ff", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.504665215717488, "stroke": true, "weight": 3}
+            ).addTo(map_de84aa8174bd09e96768da8d3237c6ed);
+        
+    
+        var popup_b4b67b0ed06b67f87e7d69268b694273 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_276ddc1ccce173ea83062da8f65bea58 = $(`<div id="html_276ddc1ccce173ea83062da8f65bea58" style="width: 100.0%; height: 100.0%;">                 <b>Local:</b> DF<br>                 <b>Vendas:</b> 88<br>                 <b>Avaliação média:</b> 4.33<br>                 <b>Frete total:</b> R$2861.53<br>                 <b>Frete médio:</b> R$32.52             </div>`)[0];
+                popup_b4b67b0ed06b67f87e7d69268b694273.setContent(html_276ddc1ccce173ea83062da8f65bea58);
+            
+        
+
+        circle_marker_31a0b8bc6ec69eb9125790ceb79bb343.bindPopup(popup_b4b67b0ed06b67f87e7d69268b694273)
+        ;
+
+        
+    
+    
+            var circle_marker_c22cade4473136bc0df57de84020c6fc = L.circleMarker(
+                [-19.19, -40.34],
+                {"bubblingMouseEvents": true, "color": "#fff400ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fff400ff", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5.4258639865002145, "stroke": true, "weight": 3}
+            ).addTo(map_de84aa8174bd09e96768da8d3237c6ed);
+        
+    
+        var popup_503214289ca00fff8076c0f5ee21cb09 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_f99274c59e0f887889d814b62fff7c7f = $(`<div id="html_f99274c59e0f887889d814b62fff7c7f" style="width: 100.0%; height: 100.0%;">                 <b>Local:</b> ES<br>                 <b>Vendas:</b> 46<br>                 <b>Avaliação média:</b> 3.93<br>                 <b>Frete total:</b> R$1546.11<br>                 <b>Frete médio:</b> R$33.61             </div>`)[0];
+                popup_503214289ca00fff8076c0f5ee21cb09.setContent(html_f99274c59e0f887889d814b62fff7c7f);
+            
+        
+
+        circle_marker_c22cade4473136bc0df57de84020c6fc.bindPopup(popup_503214289ca00fff8076c0f5ee21cb09)
+        ;
+
+        
+    
+    
+            var circle_marker_2bdeabc189e0744898f970b91f492b7c = L.circleMarker(
+                [-15.98, -49.86],
+                {"bubblingMouseEvents": true, "color": "#e8f540ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#e8f540ff", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5.656854249492381, "stroke": true, "weight": 3}
+            ).addTo(map_de84aa8174bd09e96768da8d3237c6ed);
+        
+    
+        var popup_4bd2f497baaef3ad782ec375e7dd5c4b = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_814ceeebf9c7dd0b4786375f4f5e50d0 = $(`<div id="html_814ceeebf9c7dd0b4786375f4f5e50d0" style="width: 100.0%; height: 100.0%;">                 <b>Local:</b> GO<br>                 <b>Vendas:</b> 50<br>                 <b>Avaliação média:</b> 4.14<br>                 <b>Frete total:</b> R$1999.09<br>                 <b>Frete médio:</b> R$39.98             </div>`)[0];
+                popup_4bd2f497baaef3ad782ec375e7dd5c4b.setContent(html_814ceeebf9c7dd0b4786375f4f5e50d0);
+            
+        
+
+        circle_marker_2bdeabc189e0744898f970b91f492b7c.bindPopup(popup_4bd2f497baaef3ad782ec375e7dd5c4b)
+        ;
+
+        
+    
+    
+            var circle_marker_da4ba846d1ffca74ce0ae8b5a210abec = L.circleMarker(
+                [-5.42, -45.44],
+                {"bubblingMouseEvents": true, "color": "#d6ec73ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#d6ec73ff", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 3.2, "stroke": true, "weight": 3}
+            ).addTo(map_de84aa8174bd09e96768da8d3237c6ed);
+        
+    
+        var popup_6ca5180d2c29c9f9fb04cf7eb8995c51 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_2568a33f051850093f1824664718fea5 = $(`<div id="html_2568a33f051850093f1824664718fea5" style="width: 100.0%; height: 100.0%;">                 <b>Local:</b> MA<br>                 <b>Vendas:</b> 16<br>                 <b>Avaliação média:</b> 4.25<br>                 <b>Frete total:</b> R$341.06<br>                 <b>Frete médio:</b> R$21.32             </div>`)[0];
+                popup_6ca5180d2c29c9f9fb04cf7eb8995c51.setContent(html_2568a33f051850093f1824664718fea5);
+            
+        
+
+        circle_marker_da4ba846d1ffca74ce0ae8b5a210abec.bindPopup(popup_6ca5180d2c29c9f9fb04cf7eb8995c51)
+        ;
+
+        
+    
+    
+            var circle_marker_a8fbd15fa0be5aa0f32d404f492662a1 = L.circleMarker(
+                [-18.1, -44.38],
+                {"bubblingMouseEvents": true, "color": "#edf635ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#edf635ff", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 14.707821048680188, "stroke": true, "weight": 3}
+            ).addTo(map_de84aa8174bd09e96768da8d3237c6ed);
+        
+    
+        var popup_acd4bd36ea548f9f3d4bb7c7be735427 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_6611583976387ed9e4196d9bad204172 = $(`<div id="html_6611583976387ed9e4196d9bad204172" style="width: 100.0%; height: 100.0%;">                 <b>Local:</b> MG<br>                 <b>Vendas:</b> 338<br>                 <b>Avaliação média:</b> 4.12<br>                 <b>Frete total:</b> R$11641.11<br>                 <b>Frete médio:</b> R$34.44             </div>`)[0];
+                popup_acd4bd36ea548f9f3d4bb7c7be735427.setContent(html_6611583976387ed9e4196d9bad204172);
+            
+        
+
+        circle_marker_a8fbd15fa0be5aa0f32d404f492662a1.bindPopup(popup_acd4bd36ea548f9f3d4bb7c7be735427)
+        ;
+
+        
+    
+    
+            var circle_marker_e7675965346a64bfe6031dcf8b91a55f = L.circleMarker(
+                [-20.51, -54.54],
+                {"bubblingMouseEvents": true, "color": "#daee68ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#daee68ff", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 3.752332607858744, "stroke": true, "weight": 3}
+            ).addTo(map_de84aa8174bd09e96768da8d3237c6ed);
+        
+    
+        var popup_5d9df48b18c904d5c4519cbb6400fe46 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_88b39fc533b9bf88d8a8c2acc11f7dea = $(`<div id="html_88b39fc533b9bf88d8a8c2acc11f7dea" style="width: 100.0%; height: 100.0%;">                 <b>Local:</b> MS<br>                 <b>Vendas:</b> 22<br>                 <b>Avaliação média:</b> 4.23<br>                 <b>Frete total:</b> R$716.09<br>                 <b>Frete médio:</b> R$32.55             </div>`)[0];
+                popup_5d9df48b18c904d5c4519cbb6400fe46.setContent(html_88b39fc533b9bf88d8a8c2acc11f7dea);
+            
+        
+
+        circle_marker_e7675965346a64bfe6031dcf8b91a55f.bindPopup(popup_5d9df48b18c904d5c4519cbb6400fe46)
+        ;
+
+        
+    
+    
+            var circle_marker_aa158ce8af25df71af02813f098ac917 = L.circleMarker(
+                [-12.64, -55.42],
+                {"bubblingMouseEvents": true, "color": "#cde88cff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#cde88cff", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 3.8366652186501753, "stroke": true, "weight": 3}
+            ).addTo(map_de84aa8174bd09e96768da8d3237c6ed);
+        
+    
+        var popup_ec575794a82d661b16437970c93959e4 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_052143abcffa81c804f369d2e8101ba4 = $(`<div id="html_052143abcffa81c804f369d2e8101ba4" style="width: 100.0%; height: 100.0%;">                 <b>Local:</b> MT<br>                 <b>Vendas:</b> 23<br>                 <b>Avaliação média:</b> 4.30<br>                 <b>Frete total:</b> R$769.52<br>                 <b>Frete médio:</b> R$33.46             </div>`)[0];
+                popup_ec575794a82d661b16437970c93959e4.setContent(html_052143abcffa81c804f369d2e8101ba4);
+            
+        
+
+        circle_marker_aa158ce8af25df71af02813f098ac917.bindPopup(popup_ec575794a82d661b16437970c93959e4)
+        ;
+
+        
+    
+    
+            var circle_marker_5e78dc5b0593149c37f4b77af1b980fa = L.circleMarker(
+                [-3.79, -52.48],
+                {"bubblingMouseEvents": true, "color": "#ffdb00ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ffdb00ff", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4.0, "stroke": true, "weight": 3}
+            ).addTo(map_de84aa8174bd09e96768da8d3237c6ed);
+        
+    
+        var popup_87963b9b3777c73097313ff5b102c88f = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_ca95cf25bba04e39ac4fbaf28d5e21a7 = $(`<div id="html_ca95cf25bba04e39ac4fbaf28d5e21a7" style="width: 100.0%; height: 100.0%;">                 <b>Local:</b> PA<br>                 <b>Vendas:</b> 25<br>                 <b>Avaliação média:</b> 3.80<br>                 <b>Frete total:</b> R$784.62<br>                 <b>Frete médio:</b> R$31.38             </div>`)[0];
+                popup_87963b9b3777c73097313ff5b102c88f.setContent(html_ca95cf25bba04e39ac4fbaf28d5e21a7);
+            
+        
+
+        circle_marker_5e78dc5b0593149c37f4b77af1b980fa.bindPopup(popup_87963b9b3777c73097313ff5b102c88f)
+        ;
+
+        
+    
+    
+            var circle_marker_54664450aad148c12c74cf43756c682a = L.circleMarker(
+                [-7.28, -36.72],
+                {"bubblingMouseEvents": true, "color": "#add8e6ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#add8e6ff", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 2.9933259094191533, "stroke": true, "weight": 3}
+            ).addTo(map_de84aa8174bd09e96768da8d3237c6ed);
+        
+    
+        var popup_55e2b1f9836d15e8f7e0862894dd4c56 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_ced367344505ff3ee0a3ee9c6201a595 = $(`<div id="html_ced367344505ff3ee0a3ee9c6201a595" style="width: 100.0%; height: 100.0%;">                 <b>Local:</b> PB<br>                 <b>Vendas:</b> 14<br>                 <b>Avaliação média:</b> 4.50<br>                 <b>Frete total:</b> R$581.85<br>                 <b>Frete médio:</b> R$41.56             </div>`)[0];
+                popup_55e2b1f9836d15e8f7e0862894dd4c56.setContent(html_ced367344505ff3ee0a3ee9c6201a595);
+            
+        
+
+        circle_marker_54664450aad148c12c74cf43756c682a.bindPopup(popup_55e2b1f9836d15e8f7e0862894dd4c56)
+        ;
+
+        
+    
+    
+            var circle_marker_53e3500c24fb0f5530ac9f3d6ab9f64c = L.circleMarker(
+                [-8.38, -37.86],
+                {"bubblingMouseEvents": true, "color": "#ffee00ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ffee00ff", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6.299206299209449, "stroke": true, "weight": 3}
+            ).addTo(map_de84aa8174bd09e96768da8d3237c6ed);
+        
+    
+        var popup_9e7c75aeff498dd6e8779ad1736c6dd0 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_27d7b636c1193143493112c3373cc977 = $(`<div id="html_27d7b636c1193143493112c3373cc977" style="width: 100.0%; height: 100.0%;">                 <b>Local:</b> PE<br>                 <b>Vendas:</b> 62<br>                 <b>Avaliação média:</b> 3.90<br>                 <b>Frete total:</b> R$2185.33<br>                 <b>Frete médio:</b> R$35.25             </div>`)[0];
+                popup_9e7c75aeff498dd6e8779ad1736c6dd0.setContent(html_27d7b636c1193143493112c3373cc977);
+            
+        
+
+        circle_marker_53e3500c24fb0f5530ac9f3d6ab9f64c.bindPopup(popup_9e7c75aeff498dd6e8779ad1736c6dd0)
+        ;
+
+        
+    
+    
+            var circle_marker_523a2e7dfebf4361320e66219b97c5bc = L.circleMarker(
+                [-6.6, -42.28],
+                {"bubblingMouseEvents": true, "color": "#ff0000ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff0000ff", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 2.4000000000000004, "stroke": true, "weight": 3}
+            ).addTo(map_de84aa8174bd09e96768da8d3237c6ed);
+        
+    
+        var popup_9b491fea61d90472b06d5676aa8ed24e = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_474bf9372c39d3df0d063e3b471a3a3c = $(`<div id="html_474bf9372c39d3df0d063e3b471a3a3c" style="width: 100.0%; height: 100.0%;">                 <b>Local:</b> PI<br>                 <b>Vendas:</b> 9<br>                 <b>Avaliação média:</b> 3.00<br>                 <b>Frete total:</b> R$432.52<br>                 <b>Frete médio:</b> R$48.06             </div>`)[0];
+                popup_9b491fea61d90472b06d5676aa8ed24e.setContent(html_474bf9372c39d3df0d063e3b471a3a3c);
+            
+        
+
+        circle_marker_523a2e7dfebf4361320e66219b97c5bc.bindPopup(popup_9b491fea61d90472b06d5676aa8ed24e)
+        ;
+
+        
+    
+    
+            var circle_marker_1ec72696cce0dc30bd062096f895a13d = L.circleMarker(
+                [-24.89, -51.55],
+                {"bubblingMouseEvents": true, "color": "#eaf53dff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#eaf53dff", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.830564581955606, "stroke": true, "weight": 3}
+            ).addTo(map_de84aa8174bd09e96768da8d3237c6ed);
+        
+    
+        var popup_01eb69cc27eeace39a1ee4e9b09ed68e = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_f60859e4ed735181d3b11066e63cab7d = $(`<div id="html_f60859e4ed735181d3b11066e63cab7d" style="width: 100.0%; height: 100.0%;">                 <b>Local:</b> PR<br>                 <b>Vendas:</b> 151<br>                 <b>Avaliação média:</b> 4.13<br>                 <b>Frete total:</b> R$5124.18<br>                 <b>Frete médio:</b> R$33.93             </div>`)[0];
+                popup_01eb69cc27eeace39a1ee4e9b09ed68e.setContent(html_f60859e4ed735181d3b11066e63cab7d);
+            
+        
+
+        circle_marker_1ec72696cce0dc30bd062096f895a13d.bindPopup(popup_01eb69cc27eeace39a1ee4e9b09ed68e)
+        ;
+
+        
+    
+    
+            var circle_marker_f68b77b16afcce291b2314880e2e59dd = L.circleMarker(
+                [-22.25, -42.66],
+                {"bubblingMouseEvents": true, "color": "#ffdb00ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ffdb00ff", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 14.966629547095767, "stroke": true, "weight": 3}
+            ).addTo(map_de84aa8174bd09e96768da8d3237c6ed);
+        
+    
+        var popup_9150ab6ba02b41434bd2e57ab224895c = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_d8adb8c80b8f397a76545a0cd9b24cc4 = $(`<div id="html_d8adb8c80b8f397a76545a0cd9b24cc4" style="width: 100.0%; height: 100.0%;">                 <b>Local:</b> RJ<br>                 <b>Vendas:</b> 350<br>                 <b>Avaliação média:</b> 3.80<br>                 <b>Frete total:</b> R$11794.89<br>                 <b>Frete médio:</b> R$33.70             </div>`)[0];
+                popup_9150ab6ba02b41434bd2e57ab224895c.setContent(html_d8adb8c80b8f397a76545a0cd9b24cc4);
+            
+        
+
+        circle_marker_f68b77b16afcce291b2314880e2e59dd.bindPopup(popup_9150ab6ba02b41434bd2e57ab224895c)
+        ;
+
+        
+    
+    
+            var circle_marker_a07bb1f66bf0bf2aae623f5c7e45f3f8 = L.circleMarker(
+                [-5.81, -36.59],
+                {"bubblingMouseEvents": true, "color": "#e6f347ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#e6f347ff", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 2.8844410203711917, "stroke": true, "weight": 3}
+            ).addTo(map_de84aa8174bd09e96768da8d3237c6ed);
+        
+    
+        var popup_652cd27a01191f51ee80246a72f74241 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_4c504e5b24974d90748362de107e3ed6 = $(`<div id="html_4c504e5b24974d90748362de107e3ed6" style="width: 100.0%; height: 100.0%;">                 <b>Local:</b> RN<br>                 <b>Vendas:</b> 13<br>                 <b>Avaliação média:</b> 4.15<br>                 <b>Frete total:</b> R$495.20<br>                 <b>Frete médio:</b> R$38.09             </div>`)[0];
+                popup_652cd27a01191f51ee80246a72f74241.setContent(html_4c504e5b24974d90748362de107e3ed6);
+            
+        
+
+        circle_marker_a07bb1f66bf0bf2aae623f5c7e45f3f8.bindPopup(popup_652cd27a01191f51ee80246a72f74241)
+        ;
+
+        
+    
+    
+            var circle_marker_38115d4f3a2efe71118499e3bee89d62 = L.circleMarker(
+                [-10.83, -63.34],
+                {"bubblingMouseEvents": true, "color": "#ff2900ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff2900ff", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 2.2627416997969525, "stroke": true, "weight": 3}
+            ).addTo(map_de84aa8174bd09e96768da8d3237c6ed);
+        
+    
+        var popup_acb5d952fd6e41e07707466cae3480ad = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_51325f2e058254d1a5bf38ed28e2d7a9 = $(`<div id="html_51325f2e058254d1a5bf38ed28e2d7a9" style="width: 100.0%; height: 100.0%;">                 <b>Local:</b> RO<br>                 <b>Vendas:</b> 8<br>                 <b>Avaliação média:</b> 3.12<br>                 <b>Frete total:</b> R$424.52<br>                 <b>Frete médio:</b> R$53.06             </div>`)[0];
+                popup_acb5d952fd6e41e07707466cae3480ad.setContent(html_51325f2e058254d1a5bf38ed28e2d7a9);
+            
+        
+
+        circle_marker_38115d4f3a2efe71118499e3bee89d62.bindPopup(popup_acb5d952fd6e41e07707466cae3480ad)
+        ;
+
+        
+    
+    
+            var circle_marker_5082999ebe7ca8a8d08948f3a16f40e6 = L.circleMarker(
+                [1.99, -61.33],
+                {"bubblingMouseEvents": true, "color": "#ff0000ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff0000ff", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 0.8, "stroke": true, "weight": 3}
+            ).addTo(map_de84aa8174bd09e96768da8d3237c6ed);
+        
+    
+        var popup_abee676c9d58f1f8ed7ab1b9698a0a8f = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_5075563878a558947b05699e93fb0b9d = $(`<div id="html_5075563878a558947b05699e93fb0b9d" style="width: 100.0%; height: 100.0%;">                 <b>Local:</b> RR<br>                 <b>Vendas:</b> 1<br>                 <b>Avaliação média:</b> 3.00<br>                 <b>Frete total:</b> R$169.54<br>                 <b>Frete médio:</b> R$169.54             </div>`)[0];
+                popup_abee676c9d58f1f8ed7ab1b9698a0a8f.setContent(html_5075563878a558947b05699e93fb0b9d);
+            
+        
+
+        circle_marker_5082999ebe7ca8a8d08948f3a16f40e6.bindPopup(popup_abee676c9d58f1f8ed7ab1b9698a0a8f)
+        ;
+
+        
+    
+    
+            var circle_marker_0c34b2c8bff12cd4a739a33002ecbea6 = L.circleMarker(
+                [-30.17, -53.5],
+                {"bubblingMouseEvents": true, "color": "#fffd00ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fffd00ff", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10.213716267842964, "stroke": true, "weight": 3}
+            ).addTo(map_de84aa8174bd09e96768da8d3237c6ed);
+        
+    
+        var popup_824044dfd22675cd4c8abc87c2adcc45 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_d2d6aedb36b1dfdecebf25e624a33f49 = $(`<div id="html_d2d6aedb36b1dfdecebf25e624a33f49" style="width: 100.0%; height: 100.0%;">                 <b>Local:</b> RS<br>                 <b>Vendas:</b> 163<br>                 <b>Avaliação média:</b> 3.99<br>                 <b>Frete total:</b> R$6090.00<br>                 <b>Frete médio:</b> R$37.36             </div>`)[0];
+                popup_824044dfd22675cd4c8abc87c2adcc45.setContent(html_d2d6aedb36b1dfdecebf25e624a33f49);
+            
+        
+
+        circle_marker_0c34b2c8bff12cd4a739a33002ecbea6.bindPopup(popup_824044dfd22675cd4c8abc87c2adcc45)
+        ;
+
+        
+    
+    
+            var circle_marker_05192cb2ff22258fddec20a2d75c638d = L.circleMarker(
+                [-27.45, -50.95],
+                {"bubblingMouseEvents": true, "color": "#edf733ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#edf733ff", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.653323061113575, "stroke": true, "weight": 3}
+            ).addTo(map_de84aa8174bd09e96768da8d3237c6ed);
+        
+    
+        var popup_a5939ddfcef73bb64c7500d237d5f77d = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_30b692ef677d4c02db96c59e713ea760 = $(`<div id="html_30b692ef677d4c02db96c59e713ea760" style="width: 100.0%; height: 100.0%;">                 <b>Local:</b> SC<br>                 <b>Vendas:</b> 117<br>                 <b>Avaliação média:</b> 4.11<br>                 <b>Frete total:</b> R$3095.69<br>                 <b>Frete médio:</b> R$26.46             </div>`)[0];
+                popup_a5939ddfcef73bb64c7500d237d5f77d.setContent(html_30b692ef677d4c02db96c59e713ea760);
+            
+        
+
+        circle_marker_05192cb2ff22258fddec20a2d75c638d.bindPopup(popup_a5939ddfcef73bb64c7500d237d5f77d)
+        ;
+
+        
+    
+    
+            var circle_marker_417f53336b2ddadbae0cc8a3049c1757 = L.circleMarker(
+                [-10.57, -37.45],
+                {"bubblingMouseEvents": true, "color": "#ffff00ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ffff00ff", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 1.788854381999832, "stroke": true, "weight": 3}
+            ).addTo(map_de84aa8174bd09e96768da8d3237c6ed);
+        
+    
+        var popup_f37b34bf7da987cdfbf5fb77fc110fdd = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_d518d4209f72c217ccd89f07499cfd2c = $(`<div id="html_d518d4209f72c217ccd89f07499cfd2c" style="width: 100.0%; height: 100.0%;">                 <b>Local:</b> SE<br>                 <b>Vendas:</b> 5<br>                 <b>Avaliação média:</b> 4.00<br>                 <b>Frete total:</b> R$73.92<br>                 <b>Frete médio:</b> R$14.78             </div>`)[0];
+                popup_f37b34bf7da987cdfbf5fb77fc110fdd.setContent(html_d518d4209f72c217ccd89f07499cfd2c);
+            
+        
+
+        circle_marker_417f53336b2ddadbae0cc8a3049c1757.bindPopup(popup_f37b34bf7da987cdfbf5fb77fc110fdd)
+        ;
+
+        
+    
+    
+            var circle_marker_1edcec1f55515483c093cf6f245a8822 = L.circleMarker(
+                [-22.19, -48.79],
+                {"bubblingMouseEvents": true, "color": "#e9f53fff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#e9f53fff", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 27.735897317375546, "stroke": true, "weight": 3}
+            ).addTo(map_de84aa8174bd09e96768da8d3237c6ed);
+        
+    
+        var popup_d0d4d74719d40c4d0f9e1cfb6cb2aac1 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_b1ab61739a477f334f0ac72927f9aec6 = $(`<div id="html_b1ab61739a477f334f0ac72927f9aec6" style="width: 100.0%; height: 100.0%;">                 <b>Local:</b> SP<br>                 <b>Vendas:</b> 1202<br>                 <b>Avaliação média:</b> 4.14<br>                 <b>Frete total:</b> R$38121.22<br>                 <b>Frete médio:</b> R$31.71             </div>`)[0];
+                popup_d0d4d74719d40c4d0f9e1cfb6cb2aac1.setContent(html_b1ab61739a477f334f0ac72927f9aec6);
+            
+        
+
+        circle_marker_1edcec1f55515483c093cf6f245a8822.bindPopup(popup_d0d4d74719d40c4d0f9e1cfb6cb2aac1)
+        ;
+
+        
+    
+    
+            var circle_marker_67a336cd2d9118384197be9ff8b4f4a1 = L.circleMarker(
+                [-9.46, -48.26],
+                {"bubblingMouseEvents": true, "color": "#ffc800ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ffc800ff", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 2.8844410203711917, "stroke": true, "weight": 3}
+            ).addTo(map_de84aa8174bd09e96768da8d3237c6ed);
+        
+    
+        var popup_bc878a739d4935e4a515e528b318f35c = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_9e4e4783dad7ea83daaab58b5d1cebd6 = $(`<div id="html_9e4e4783dad7ea83daaab58b5d1cebd6" style="width: 100.0%; height: 100.0%;">                 <b>Local:</b> TO<br>                 <b>Vendas:</b> 13<br>                 <b>Avaliação média:</b> 3.69<br>                 <b>Frete total:</b> R$514.85<br>                 <b>Frete médio:</b> R$39.60             </div>`)[0];
+                popup_bc878a739d4935e4a515e528b318f35c.setContent(html_9e4e4783dad7ea83daaab58b5d1cebd6);
+            
+        
+
+        circle_marker_67a336cd2d9118384197be9ff8b4f4a1.bindPopup(popup_bc878a739d4935e4a515e528b318f35c)
+        ;
+
+        
+    
+</script>
+</html>
