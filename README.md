@@ -1,4 +1,4 @@
-# Projeto Final - AluraStore Brasil 🇧🇷
+# Projeto - AluraStore Brasil 🇧🇷
 ___
 
 **Este notebook é o projeto do curso Oracle Next Education + Alura.**
