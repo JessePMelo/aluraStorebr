@@ -32,6 +32,6 @@ Neste notebook, os dados das quatro lojas foram unificados e analisados por meio
 
 ## 📈 Resultado Esperado
 
-Ao final da análise, será apresentado um relatório claro e objetivo, com os principais insights obtidos e a **recomendação final sobre qual loja deve ser encerrada**, considerando seus pontos fortes e fracos em relação às demais.
+Ao final da análise, será apresentado um relatório ***(Relatorio Final)*** claro e objetivo, com os principais insights obtidos e a **recomendação final sobre qual loja deve ser encerrada**, considerando seus pontos fortes e fracos em relação às demais.
 
 ---
